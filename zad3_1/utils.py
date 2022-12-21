@@ -33,3 +33,11 @@ def findE(n):
         pn = findFourDigitPrime()
         if nwd(n, pn) == 1:
             return pn
+
+def findD(e, phi):
+    d = 1
+    while True:
+        # print(e, d, phi, (e * d) % phi)
+        if (e * d) % phi == 1:
+            return d
+        d += 1
