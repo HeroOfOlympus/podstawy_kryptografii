@@ -1,42 +1,16 @@
-from hashlib import md5
-from base64 import b64decode
-from base64 import b64encode
-from Crypto.Cipher import AES
+from utils import *
+from aes_ecb import AES_ECB
 
-BLOCK_SIZE = 16  # Bytes
-pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * \
-                chr(BLOCK_SIZE - len(s) % BLOCK_SIZE)
-unpad = lambda s: s[:-ord(s[len(s) - 1:])]
+msg = input('message: ')
+pwd = input('key: ')
 
+file = open('encoded_aes_ecb.txt', 'wb')
 
-class AESCipher:
-    """
-    Usage:
-        c = AESCipher('password').encrypt('message')
-        m = AESCipher('password').decrypt(c)
-    Tested under Python 3 and PyCrypto 2.6.1.
-    """
+c = AES_ECB(pwd).encrypt(msg)
 
-    def __init__(self, key):
-        self.key = md5(key.encode('utf8')).hexdigest()
+decoded = AES_ECB(pwd).decrypt(c)
+printSeparated(c)
 
-    def encrypt(self, raw):
-        raw = pad(raw)
-        cipher = AES.new(self.key.encode("utf8"), AES.MODE_ECB)
-        return b64encode(cipher.encrypt(raw.encode('utf8')))
+file.write(c)
 
-    def decrypt(self, enc):
-        enc = b64decode(enc)
-        cipher = AES.new(self.key.encode("utf8"), AES.MODE_ECB)
-        return unpad(cipher.decrypt(enc)).decode('utf8')
-
-
-##
-# MAIN
-# Just a test.
-msg = input('Message...: ')
-pwd = input('Password..: ')
-
-c = AESCipher(pwd).encrypt(msg)
-print('Ciphertext:', c)
-print('decoded:', AESCipher(pwd).decrypt(c))
+file.close()

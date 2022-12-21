@@ -1,4 +1,4 @@
-from utils import bitArrayXor, fileToArray, getRandomBloomNumber, generateBbs
+from utils import *
 
 # bbs XOR decoded -> encoded
 # bbs XOR encoded -> decoded
