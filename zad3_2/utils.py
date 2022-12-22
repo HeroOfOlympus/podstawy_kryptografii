@@ -41,3 +41,6 @@ def findD(e, phi):
         if (e * d) % phi == 1:
             return d
         d += 1
+
+def rsaCrypt(message, de, n):
+    return [pow(m, de, n) for m in message]
