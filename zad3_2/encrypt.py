@@ -1,4 +1,8 @@
 from utils import *
+from pathlib import Path
+
+path = Path.cwd()
+print(path)
 
 privateKeyA= input('private key A: ')
 privateKeyB= input('private key B: ')

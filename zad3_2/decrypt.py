@@ -13,16 +13,24 @@ messageEncryptedFileB = open('message_encrypted_b.txt', 'r')
 messageEncryptedA = messageEncryptedFileA.read().splitlines()
 messageEncryptedB = messageEncryptedFileB.read().splitlines()
 
-messageA = rsaCrypt([int(m) for m in messageEncryptedA], eA, nA)
-messageB = rsaCrypt([int(m) for m in messageEncryptedB], eB, nB)
+messageAwithA = rsaCrypt([int(m) for m in messageEncryptedA], eA, nA)
+messageAwithB = rsaCrypt([int(m) for m in messageEncryptedA], eB, nB)
+messageBwithB = rsaCrypt([int(m) for m in messageEncryptedB], eB, nB)
+messageBwithA = rsaCrypt([int(m) for m in messageEncryptedB], eA, nA)
 
 def messageArrayToMessage(messageArray):
     message = ''
     for m in messageArray:
-        message += chr(m)
+        try:
+            message += chr(m)
+        except ValueError:
+            message += '#'
     return message
-print('A: ', messageArrayToMessage(messageA))
-print('B: ', messageArrayToMessage(messageB))
+
+print('A with key A: ', messageArrayToMessage(messageAwithA))
+print('A with key B: ', messageArrayToMessage(messageAwithB))
+print('B with key B: ', messageArrayToMessage(messageBwithB))
+print('B with key A: ', messageArrayToMessage(messageBwithA))
 
 messageEncryptedFileA.close()
 messageEncryptedFileB.close()
