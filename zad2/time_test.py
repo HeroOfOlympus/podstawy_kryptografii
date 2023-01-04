@@ -6,9 +6,9 @@ KEY32 = b'thirty two byte key aaaaaaaaaaaa'
 IV = b'fdsadafdsafdadaf'
 NONCE = b'noooncee'
 
-messageShortFile = open('test_files/message_short.txt', 'r')
-messageMediumFile = open('test_files/message_medium.txt', 'r')
-messageLongFile = open('test_files/message_long.txt', 'r')
+messageShortFile = open('message_short.txt', 'r')
+messageMediumFile = open('message_medium.txt', 'r')
+messageLongFile = open('message_long.txt', 'r')
 
 MODES = {
     'ECB': AES.MODE_ECB,
