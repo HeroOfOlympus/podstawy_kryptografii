@@ -1,16 +1,17 @@
 from utils import *
 
 messageFile = open('message.txt', 'r')
+ivFile = open('iv.txt', 'rb')
 encodedMessageFile = open('encoded_message.txt', 'wb')
+iv = ivFile.read()
+# print(iv)
 keyStr = input('key: ')
 messageStr = messageFile.read()
 message, key = strToBytes(messageStr), strToBytes(keyStr)
 
-# print(len(message), len(messageStr), len(fillToBlockSize(message)))
+encodedMessage = aesEncodeCbc(message, key, iv)
 
-encodedMessage = aesEncodeEcb(message, key)
-# [print(x) for x in sliceIntoByteGroups(encodedMessage)]
 encodedMessageFile.write(encodedMessage)
 
-messageFile.close()
 encodedMessageFile.close()
+ivFile.close()
