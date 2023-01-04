@@ -64,18 +64,21 @@ def aesDecodeEcb(encodedMessage: bytes, key: bytes) -> bytes:
 def aesEncodeCbc(message: bytes, key: bytes, iv: bytes) -> bytes:
     filledKey = fillToBlockSize(key)
     filledMessage = fillToBlockSize(message)
+    # print(message)
+    # print(filledMessage)
     blocks = sliceIntoBlocks(filledMessage)
 
-    [print(x, len(x)) for x in blocks]
+    # [print(x, len(x)) for x in blocks]
 
     encodedBlocks = []
-    encodedBlocks.append(aesEncodeEcb(bytesXor(blocks[0], iv), filledKey))
+    b0 = blocks[0]
+    xor = bytesXor(b0, iv)
+    encodedBlocks.append(aesEncodeEcb(xor, filledKey))
     for i in range(1, len(blocks)):
-        xor = bytesXor(blocks[i], blocks[i - 1])
-        print('dadada', xor)
+        xor = bytesXor(encodedBlocks[i - 1], blocks[i])
         encodedBlocks.append(aesEncodeEcb(xor, filledKey))
 
-    [print(x, len(x)) for x in encodedBlocks]
+    # [print(x, len(x)) for x in encodedBlocks]
 
     return joinBlocks(encodedBlocks)
 
@@ -88,7 +91,8 @@ def aesDecodeCbc(encodedMessage: bytes, key: bytes, iv: bytes) -> bytes:
     blocks = []
     blocks.append(bytesXor(aesDecodeEcb(encodedBlocks[0], filledKey), iv))
     for i in range(1, len(encodedBlocks)):
-        blocks.append(bytesXor(aesDecodeEcb(encodedBlocks[i], filledKey), blocks[i - 1]))
+        xor = bytesXor(aesDecodeEcb(encodedBlocks[i], filledKey), encodedBlocks[i - 1])
+        blocks.append(xor)
 
     # [print(x, len(x)) for x in blocks]
 
@@ -99,8 +103,34 @@ def aesDecodeCbc(encodedMessage: bytes, key: bytes, iv: bytes) -> bytes:
 ##########################
 
 def aesEncodePbc(message: bytes, key: bytes, iv: bytes) -> bytes:
-    return
+    filledKey = fillToBlockSize(key)
+    filledMessage = fillToBlockSize(message)
+    blocks = sliceIntoBlocks(filledMessage)
 
-def aesDecodePbc(encryptedMessage: bytes, key: bytes, iv: bytes) -> bytes:
-    return
-    
+    # [print(x, len(x)) for x in blocks]
+
+    encodedBlocks = []
+    encodedBlocks.append(aesEncodeEcb(bytesXor(blocks[0], iv), filledKey))
+    for i in range(1, len(blocks)):
+        xor = bytesXor(blocks[i - 1], blocks[i])
+        encodedBlocks.append(aesEncodeEcb(xor, filledKey))
+
+    # [print(x, len(x)) for x in encodedBlocks]
+
+    return joinBlocks(encodedBlocks)
+
+def aesDecodePbc(encodedMessage: bytes, key: bytes, iv: bytes) -> bytes:
+    filledKey = fillToBlockSize(key)
+    encodedBlocks = sliceIntoBlocks(encodedMessage)
+
+    # [print(x, len(x)) for x in encodedBlocks]
+
+    blocks = []
+    blocks.append(bytesXor(aesDecodeEcb(encodedBlocks[0], filledKey), iv))
+    for i in range(1, len(encodedBlocks)):
+        xor = bytesXor(aesDecodeEcb(encodedBlocks[i], filledKey), blocks[i - 1])
+        blocks.append(xor)
+
+    # [print(x, len(x)) for x in blocks]
+
+    return joinBlocks(blocks)

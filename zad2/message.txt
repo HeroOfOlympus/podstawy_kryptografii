@@ -1,1 +1,1 @@
-a message to be encrypted and decrypted
+a message to be encrypted and decrypted, this is slightly longer one for testing purposes
